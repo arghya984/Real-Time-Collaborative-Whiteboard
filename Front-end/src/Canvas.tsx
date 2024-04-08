@@ -85,7 +85,7 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
   };
 
   return (
-    <div>
+    <div> <h4>Adjust The Brush size before start writing</h4>
       <canvas id="canvas" width={width} height={height} style={canvasStyle}/>
       <div>
         <label>Color:</label>
@@ -96,7 +96,7 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
         <input type="range" min="1" max="20" value={brushSize} onChange={(e) => changeBrushSize(parseInt(e.target.value))} />
       </div>
       <div>
-        <button onClick={undo} className="btn btn-secondary" style={{ marginRight: '10px' }}>Undo (Ctrl+z)</button>
+        <button  onClick={undo} className="btn btn-secondary" style={{ marginRight: '10px' }}>Undo (Ctrl+z)</button>
         <button onClick={redo} className="btn btn-secondary">Redo (Ctrl+y)</button>
       </div>
     </div>
