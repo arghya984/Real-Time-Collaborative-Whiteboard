@@ -3,12 +3,13 @@ import './App.css';
 
 import Canvas from './Canvas'
 
+
 const App=()=> {
   
 
   return (
     <div className="App" >
-      <Canvas width= {800} height= {600}/>
+      <Canvas width={800} height={500} />
 
       </div>
   )

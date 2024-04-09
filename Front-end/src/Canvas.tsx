@@ -34,6 +34,8 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
         undo();
       } else if (e.ctrlKey && e.key === 'y') {
         redo();
+      } else if (e.ctrlKey && e.key === 's') {
+        saveImage();
       }
     };
 
@@ -73,7 +75,11 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
   const undo = () => {
     if (currentStep > 0) {
       setCurrentStep(prev => prev - 1);
-      canvasRef.current?.remove(canvasRef.current?.getObjects().pop());
+      const objects = canvasRef.current?.getObjects();
+      if (objects && objects.length > 0) {
+        const lastObject = objects[objects.length - 1];
+        canvasRef.current?.remove(lastObject);
+      }
     }
   };
 
@@ -84,9 +90,22 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
     }
   };
 
+  const saveImage = () => {
+    if (canvasRef.current) {
+      const dataURL = canvasRef.current.toDataURL({ format: 'png' });
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = 'whiteboard.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
+
   return (
-    <div> <h4>Adjust The Brush size before start writing</h4>
-      <canvas id="canvas" width={width} height={height} style={canvasStyle}/>
+    <div>
+      <h4>Adjust The Brush size before start writing</h4>
+      <canvas id="canvas" width={width} height={height} style={canvasStyle} />
       <div>
         <label>Color:</label>
         <input type="color" value={color} onChange={(e) => changeColor(e.target.value)} />
@@ -96,8 +115,9 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
         <input type="range" min="1" max="20" value={brushSize} onChange={(e) => changeBrushSize(parseInt(e.target.value))} />
       </div>
       <div>
-        <button  onClick={undo} className="btn btn-secondary" style={{ marginRight: '10px' }}>Undo (Ctrl+z)</button>
-        <button onClick={redo} className="btn btn-secondary">Redo (Ctrl+y)</button>
+        <button onClick={undo} className="btn btn-secondary" style={{ marginRight: '10px' }}>Undo (Ctrl+z)</button>
+        <button onClick={redo} className="btn btn-secondary" style={{ marginRight: '10px' }}>Redo (Ctrl+y)</button>
+        <button onClick={saveImage} className="btn btn-secondary">Save Image (Ctrl+s)</button>
       </div>
     </div>
   );
@@ -105,16 +125,6 @@ const Canvas: React.FC<CanvasProps> = ({ width, height }) => {
 
 export default Canvas;
 
-
-
-
-
-
-
-
-
-// style={canvasStyle}
-//this variable specifies the style of the canvas component,
-const canvasStyle={
-  border : "1px solid black"
-}
+const canvasStyle = {
+  border: "1px solid black"
+};
